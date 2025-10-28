@@ -1,0 +1,17 @@
+{
+  "name": "agenda-api",
+  "version": "1.0.0",
+  "description": "API de agenda em memória",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
