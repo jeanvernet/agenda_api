@@ -58,4 +58,41 @@ router.get('/semana', (req, res) => {
   res.json(ordenada);
 });
 
+router.put('/:id', (req, res) => {
+  const usuarioId = req.usuarioId;
+  const { id } = req.params;
+  const { tipoId, titulo, descricao, data, horaInicio, horaFim } = req.body;
+
+  const compromisso = compromissos.find(c => c.id === id && c.usuarioId === usuarioId);
+  if (!compromisso)
+    return res.status(404).json({ erro: 'Compromisso não encontrado.' });
+
+  if (!tipoId || !titulo || !data || !horaInicio || !horaFim)
+    return res.status(400).json({ erro: 'Campos obrigatórios faltando.' });
+
+  compromisso.tipoId = tipoId;
+  compromisso.titulo = titulo;
+  compromisso.descricao = descricao;
+  compromisso.data = data;
+  compromisso.horaInicio = horaInicio;
+  compromisso.horaFim = horaFim;
+
+  res.json({ mensagem: 'Compromisso atualizado com sucesso.', compromisso });
+});
+
+// routes/compromissos.js
+router.delete('/:id', (req, res) => {
+  const usuarioId = req.usuarioId;
+  const { id } = req.params;
+
+  const index = compromissos.findIndex(c => c.id === id && c.usuarioId === usuarioId);
+  if (index === -1)
+    return res.status(404).json({ erro: 'Compromisso não encontrado.' });
+
+  compromissos.splice(index, 1);
+  res.json({ mensagem: 'Compromisso removido com sucesso.' });
+});
+
+
+
 export default router;

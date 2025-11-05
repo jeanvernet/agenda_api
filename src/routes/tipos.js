@@ -22,4 +22,20 @@ router.get('/', (req, res) => {
   res.json(tipos.filter(t => t.usuarioId === usuarioId));
 });
 
+// Deletar tipo de compromisso
+router.delete('/:id', (req, res) => {
+  const usuarioId = req.usuarioId;
+  const { id } = req.params;
+
+  // Encontra o índice do tipo pertencente ao usuário
+  const index = tipos.findIndex(t => t.id === id && t.usuarioId === usuarioId);
+
+  if (index === -1)
+    return res.status(404).json({ erro: 'Tipo não encontrado.' });
+
+  tipos.splice(index, 1);
+  res.json({ mensagem: 'Tipo removido com sucesso.' });
+});
+
+
 export default router;
