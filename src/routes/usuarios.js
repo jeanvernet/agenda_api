@@ -19,7 +19,53 @@ router.post('/', (req, res) => {
   res.status(201).json(novo);
 });
 
-// Listar usuários (apenas para teste)
-router.get('/', (req, res) => res.json(usuarios));
+// Listar usuários 
+router.get('/', (req, res) => {
+  const lista = usuarios.map(({ senha, ...u }) => u);
+  res.json(lista);
+});
+
+
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+
+  const user = usuarios.find(u => u.id === id);
+  if (!user)
+    return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+  res.json(user);
+});
+
+
+// routes/usuarios.js
+router.delete('/:id', (req, res) => {
+  const usuarioId = req.usuarioId; // ID do usuário autenticado
+  const { id } = req.params;
+
+  // Garantir que o usuário só pode deletar a própria conta
+  if (usuarioId !== id) return res.status(403).json({ erro: 'Acesso negado.' });
+
+  const index = usuarios.findIndex(u => u.id === id);
+  if (index === -1)
+    return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+  usuarios.splice(index, 1);
+  res.json({ mensagem: 'Usuário removido com sucesso.' });
+});
+
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { nome, email, senha } = req.body;
+
+  const user = usuarios.find(u => u.id === id);
+  if (!user) return res.status(404).json({ erro: 'Usuário não encontrado.' });
+
+  if (nome) user.nome = nome;
+  if (email) user.email = email;
+  if (senha) user.senha = senha;
+
+  res.json({ mensagem: 'Usuário atualizado com sucesso.', usuario: user });
+});
+
 
 export default router;
